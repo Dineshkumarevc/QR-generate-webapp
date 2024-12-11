@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text QR Code Generator</title>
+
+    <!-- External QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            background: url('https://i.pinimg.com/originals/62/39/4d/62394d753859943e6a1a36443ef78795.gif') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+
+        h1 {
+            color: #213760;
+            text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.8);
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            background-color: rgba(99, 88, 88, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4670b0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #375a8c;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Text QR Code Generator</h1>
+
+    <div class="input-container">
+        <label for="text">Enter Text or URL:</label>
+        <input type="text" id="text" placeholder="Enter your text or URL here" required>
+        <div class="buttons">
+            <button onclick="generateQRCode()">Generate QR Code</button>
+            <button onclick="downloadQRCode()" id="downloadBtn" disabled>Download QR Code</button>
+            <button onclick="shareToWhatsApp()" id="whatsappBtn" disabled>Share on WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- Div to display the generated QR code -->
+    <div id="qrcode"></div>
+
+    <script>
+        let qrCodeInstance;
+        let textToShare;
+
+        function validateURL(text) {
+            try {
+                const url = new URL(text);
+                return url.href; // Valid URL, return it
+            } catch {
+                return null; // Invalid URL
+            }
+        }
+
+        function generateQRCode() {
+            const inputText = document.getElementById('text').value.trim();
+            const qrcodeContainer = document.getElementById('qrcode');
+
+            if (inputText === "") {
+                alert("Please enter some text or a URL.");
+                return;
+            }
+
+            let finalText = inputText;
+
+            // Check if it's a URL; if not, treat as plain text
+            const validatedURL = validateURL(inputText);
+            if (!validatedURL && inputText.includes(".")) {
+                // Auto-add "https://" for likely URLs
+                finalText = "https://" + inputText;
+            }
+
+            // Clear any existing QR codes
+            qrcodeContainer.innerHTML = "";
+
+            // Create the QR code
+            qrCodeInstance = new QRCode(qrcodeContainer, {
+                text: finalText, // Encode the validated or fixed text
+                width: 200,
+                height: 200,
+                colorDark: "#213760",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            textToShare = finalText; // Save for sharing
+
+            // Enable the buttons
+            document.getElementById("downloadBtn").disabled = false;
+            document.getElementById("whatsappBtn").disabled = false;
+        }
+
+        function downloadQRCode() {
+            const qrCanvas = document.querySelector("#qrcode canvas");
+            if (!qrCanvas) return;
+
+            const link = document.createElement("a");
+            link.href = qrCanvas.toDataURL("image/png");
+            link.download = "qrcode.png";
+            link.click();
+        }
+
+        function shareToWhatsApp() {
+            if (!textToShare) return;
+
+            const encodedMessage = encodeURIComponent(`Here's the text QR code: ${textToShare}`);
+            const whatsappURL = `https://wa.me/?text=${encodedMessage}`;
+            window.open(whatsappURL, "_blank");
+        }
+    </script>
+</body>
+</html>

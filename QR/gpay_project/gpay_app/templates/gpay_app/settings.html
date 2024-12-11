@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPay Clone - Settings</title>
+
+    <style>
+        /* General Page Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Header Section */
+        .header-container {
+            background-color: #34b7f1;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Content Section */
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-top: 30px;
+            color: #333;
+        }
+
+        .settings-content {
+            width: 80%;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        /* Form Styles */
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .settings-form label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .settings-form input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .settings-form button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #34b7f1;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .settings-form button:hover {
+            background-color: #2a8da3;
+        }
+
+        /* Footer Section (optional) */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #34b7f1;
+            color: white;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header-container">
+        <div class="logo">GPay Clone</div>
+
+        <!-- Navigation Links -->
+        <div class="nav-links">
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'help' %}">Help</a>
+        </div>
+    </div>
+
+    <!-- Main Heading -->
+    <h1>Settings</h1>
+
+    <!-- Settings Section -->
+    <div class="settings-content">
+        <h2>Profile Settings</h2>
+        <p>Here, you can update your account settings, change your email, or update payment preferences.</p>
+
+        <!-- Settings Form -->
+        <div class="settings-form">
+            <form method="POST">
+                {% csrf_token %}
+                <label for="email">Update Email:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" placeholder="Enter new email address">
+
+                <label for="phone">Update Phone Number:</label>
+                <input type="text" id="phone" name="phone" value="{{ user.profile.phone_number }}" placeholder="Enter new phone number">
+
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer Section (optional) -->
+    <footer>
+        &copy; 2024 GPay Clone. All Rights Reserved.
+    </footer>
+</body>
+</html>

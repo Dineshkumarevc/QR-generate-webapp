@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy</title>
+
+    <!-- Font Awesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* Reset and Basic Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #03183d;
+            padding: 20px;
+        }
+
+        .header-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background-color: #475976;
+            box-shadow: 0 4px 10px rgba(80, 78, 78, 0.2);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #a5bef5;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 18px;
+            color: rgb(106, 154, 250);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: #183a83;
+        }
+
+        .nav-links a:hover {
+            color: #4a84f1;
+            background-color: rgba(52, 116, 244, 0.8);
+            transform: scale(1.05);
+        }
+
+        .home-icon {
+            font-size: 24px;
+            color: rgb(106, 154, 250);
+            cursor: pointer;
+        }
+
+        .home-icon:hover {
+            color: #4a84f1;
+        }
+
+        .privacy-policy-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #103169;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .privacy-policy-container h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #6695ed;
+        }
+
+        .privacy-policy-container p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #5f96cd;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            width: 100%;
+            background-color: #213760;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .footer-links a {
+            color: #a5d6fc;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <div class="header-container">
+        <div class="logo">QRify</div>
+        <div class="nav-links">
+            <!-- Home Icon -->
+            <a href="http://127.0.0.1:8000" class="home-icon"><i class="fas fa-home"></i></a>
+            <a href="http://127.0.0.1:8000/help">Help</a>
+            <a href="http://127.0.0.1:8000/contact">Contact</a>
+            <a href="http://127.0.0.1:8000/settings">Settings</a>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Content -->
+    <div class="privacy-policy-container">
+        <h2>Privacy Policy</h2>
+        <p>At QRify, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and protect your information.</p>
+        <p><strong>Information We Collect</strong></p>
+        <p>We collect information that you provide to us directly, such as when you sign up for an account, create QR codes, or contact us. This may include your name, email address, and payment information.</p>
+        <p><strong>How We Use Your Information</strong></p>
+        <p>We use your information to provide and improve our services, communicate with you, and protect against fraud or unauthorized activities.</p>
+        <p><strong>Data Security</strong></p>
+        <p>We take reasonable precautions to protect your data from loss, misuse, and unauthorized access. However, no method of transmission over the Internet is completely secure.</p>
+        <p><strong>Cookies</strong></p>
+        <p>We use cookies to enhance your experience on our website. You can choose to disable cookies in your browser settings.</p>
+        <p><strong>Your Rights</strong></p>
+        <p>You have the right to access, correct, or delete your personal information. If you wish to exercise any of these rights, please contact us.</p>
+        <p><strong>Changes to this Privacy Policy</strong></p>
+        <p>We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting a notice on our website.</p>
+        <p>Effective Date: December 2024</p>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 QRify. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{% url 'terms_of_service' %}">Terms of Service</a>
+                <a href="% url 'contact' %">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

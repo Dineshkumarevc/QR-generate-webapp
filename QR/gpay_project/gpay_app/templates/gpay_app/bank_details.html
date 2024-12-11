@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Details</title>
+    <style>
+        /* style.css */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #4CAF50;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        input {
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        .submit-button {
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #34A853;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Search bar style */
+        .search-container {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .search-input {
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        /* Styling for the bank details */
+        .bank-detail {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .edit-button, .remove-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .edit-button {
+            background-color: #FFA000;
+            color: #fff;
+        }
+
+        .remove-button {
+            background-color: #FF5722;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bank Details</h1>
+        
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by Bank Name or Account Number" onkeyup="searchBankDetails()">
+        </div>
+        
+        <!-- Form for Adding Bank Details -->
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="submit-button">Save Details</button>
+        </form>
+
+        <!-- Saved Bank Details -->
+        <div class="saved-details">
+            <h3>Saved Bank Details:</h3>
+            {% for detail in bank_details %}
+                <div class="bank-detail" data-id="{{ detail.id }}" data-name="{{ detail.bank_name }}" data-account="{{ detail.account_number }}">
+                    <p><strong>Bank Name:</strong> {{ detail.bank_name }}</p>
+                    <p><strong>Account Number:</strong> {{ detail.account_number }}</p>
+                    <p><strong>IFSC Code:</strong> {{ detail.ifsc_code }}</p>
+                    <button class="edit-button" data-id="{{ detail.id }}" onclick="editBankDetail(this)">Edit</button>
+<button class="remove-button" data-id="{{ detail.id }}" onclick="removeBankDetail(this)">Remove</button>
+<hr>
+
+                    <hr>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Edit Bank Detail Modal -->
+    <div id="editModal" style="display:none;">
+        <form id="editForm" method="post">
+            {% csrf_token %}
+            <label for="editBankName">Bank Name:</label>
+            <input type="text" id="editBankName" name="bank_name" required>
+            <label for="editAccountNumber">Account Number:</label>
+            <input type="text" id="editAccountNumber" name="account_number" required>
+            <label for="editIfscCode">IFSC Code:</label>
+            <input type="text" id="editIfscCode" name="ifsc_code" required>
+            <button type="submit" class="submit-button">Save Changes</button>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript to handle searching through bank details
+        function searchBankDetails() {
+            const input = document.getElementById("searchInput");
+            const filter = input.value.toUpperCase(); // Convert to uppercase for case-insensitive matching
+            const bankDetails = document.querySelectorAll(".bank-detail"); // Get all bank details elements
+
+            bankDetails.forEach(function(detail) {
+                const bankName = detail.getAttribute("data-name").toUpperCase(); // Get bank name attribute
+                const accountNumber = detail.getAttribute("data-account").toUpperCase(); // Get account number attribute
+
+                // Show or hide bank details based on the search query
+                if (bankName.includes(filter) || accountNumber.includes(filter)) {
+                    detail.style.display = ""; // Show the matching bank detail
+                } else {
+                    detail.style.display = "none"; // Hide the non-matching bank detail
+                }
+            });
+        }
+
+        // Function to edit bank details
+function editBankDetail(button) {
+    const id = button.getAttribute('data-id'); // Get the ID from the data-id attribute
+    // Fetch the bank details by ID
+    fetch(`/edit-bank-detail/${id}/`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Populate the form with the current bank details
+        document.getElementById('editBankName').value = data.bank_name;
+        document.getElementById('editAccountNumber').value = data.account_number;
+        document.getElementById('editIfscCode').value = data.ifsc_code;
+
+        // Show the edit modal
+        document.getElementById('editModal').style.display = 'block';
+
+        // Handle form submission
+        document.getElementById('editForm').onsubmit = function(event) {
+            event.preventDefault();
+
+            const updatedData = {
+                bank_name: document.getElementById('editBankName').value,
+                account_number: document.getElementById('editAccountNumber').value,
+                ifsc_code: document.getElementById('editIfscCode').value,
+            };
+
+            // Send updated data to the server
+            fetch(`/update-bank-detail/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value
+                },
+                body: JSON.stringify(updatedData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert(result.message);
+                location.reload(); // Reload the page to reflect the changes
+            });
+        };
+    });
+}
+
+// Function to remove bank details
+function removeBankDetail(button) {
+    const id = button.getAttribute('data-id'); // Get the ID from the data-id attribute
+    if (confirm("Are you sure you want to remove this bank detail?")) {
+        fetch(`/remove-bank-detail/${id}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            location.reload(); // Reload the page to remove the deleted detail
+        });
+    }
+}
+
+
+        
+    </script>
+</body>
+</html>

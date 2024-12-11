@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced QR Code Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+    <style>
+        /* Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: url('https://i.pinimg.com/originals/63/7a/4d/637a4d42e1738853b2f96ffbbd60622a.gif') no-repeat center center fixed;
+            background-size: cover;
+            color: #f0f0f0;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .container {
+            background: rgba(28, 85, 139, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            background-color: #4670b0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #375a8c;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Advanced QR Code Generator</h1>
+    <div class="container">
+        <input type="text" id="input" placeholder="Enter URL or Text (e.g., https://example.com)">
+        <button onclick="generateQRCode()">Generate QR Code</button>
+        <button onclick="downloadQRCode()" id="downloadBtn" disabled>Download QR Code</button>
+        <button onclick="shareToWhatsApp()" id="whatsappBtn" disabled>Share QR Code on WhatsApp</button>
+        <div id="qrcode"></div>
+    </div>
+
+    <script>
+        let qrCodeInstance;
+        let contentToShare;
+
+        function generateQRCode() {
+            const inputElement = document.getElementById('input');
+            let content = inputElement.value.trim();
+
+            if (!content) {
+                alert("Please enter text or a valid URL.");
+                return;
+            }
+
+            if (content.startsWith("http://") || content.startsWith("https://")) {
+                contentToShare = content;
+            } else if (content.includes(".")) {
+                content = "https://" + content;
+                contentToShare = content;
+            } else {
+                contentToShare = content;
+            }
+
+            try {
+                if (contentToShare.startsWith("http://") || contentToShare.startsWith("https://")) {
+                    new URL(contentToShare);
+                }
+            } catch {
+                alert("Invalid URL. Please check and try again.");
+                return;
+            }
+
+            const qrcodeContainer = document.getElementById('qrcode');
+            qrcodeContainer.innerHTML = "";
+
+            qrCodeInstance = new QRCode(qrcodeContainer, {
+                text: contentToShare,
+                width: 200,
+                height: 200,
+                colorDark: "#ffffff",
+                colorLight: "#213760",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            document.getElementById("downloadBtn").disabled = false;
+            document.getElementById("whatsappBtn").disabled = false;
+        }
+
+        function downloadQRCode() {
+            const qrCanvas = document.querySelector("#qrcode canvas");
+            if (!qrCanvas) return;
+
+            const link = document.createElement("a");
+            link.href = qrCanvas.toDataURL("image/png");
+            link.download = "qrcode.png";
+            link.click();
+        }
+
+        function shareToWhatsApp() {
+            const qrCanvas = document.querySelector("#qrcode canvas");
+            if (!qrCanvas) return;
+
+            const qrDataUrl = qrCanvas.toDataURL("image/png");
+            const blob = dataURLToBlob(qrDataUrl);
+
+            const file = new File([blob], "qrcode.png", { type: "image/png" });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                navigator.share({
+                    files: [file],
+                    title: "QR Code",
+                    text: "Here is your QR Code!",
+                }).catch((err) => console.log("Sharing failed", err));
+            } else {
+                alert("Sharing is not supported on your device.");
+            }
+        }
+
+        function dataURLToBlob(dataURL) {
+            const parts = dataURL.split(',');
+            const byteString = atob(parts[1]);
+            const mimeString = parts[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            return new Blob([ab], { type: mimeString });
+        }
+    </script>
+</body>
+</html>

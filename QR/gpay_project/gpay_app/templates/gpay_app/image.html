@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image QR Code Generator</title>
+
+    <!-- External QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+    <style>
+        /* Basic Styling */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfTTFo5aSal4FRYHCHktZT5UMTodQCOlxckA&s') no-repeat center center;
+            background-size: cover;
+            color: #333;
+        }
+
+        h1 {
+            color: #213760;
+            background-color: rgba(255, 255, 255, 0.8); /* Optional background for better readability */
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Optional background for input container */
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4670b0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #375a8c;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Image QR Code Generator</h1>
+
+    <div class="input-container">
+        <label for="file">Upload an Image:</label>
+        <input type="file" id="file" accept="image/*" required>
+        <div class="buttons">
+            <button onclick="generateQRCode()">Generate QR Code</button>
+            <button onclick="downloadQRCode()" id="downloadBtn" disabled>Download QR Code</button>
+            <button onclick="shareToWhatsApp()" id="whatsappBtn" disabled>Share on WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- Div to display the generated QR code -->
+    <div id="qrcode"></div>
+
+    <script>
+        let uploadedImageURL;
+
+        async function uploadImage(file) {
+            const clientId = "bba1e2810d83bfa"; // Replace with your Imgur Client ID
+            const formData = new FormData();
+            formData.append("image", file);
+
+            try {
+                const response = await fetch("https://api.imgur.com/3/image", {
+                    method: "POST",
+                    headers: { Authorization: `Client-ID ${clientId}` },
+                    body: formData,
+                });
+                const data = await response.json();
+                if (data.success) {
+                    console.log("Image uploaded successfully:", data.data.link);
+                    return data.data.link; // Return the uploaded image URL
+                } else {
+                    throw new Error("Image upload failed.");
+                }
+            } catch (error) {
+                console.error("Error uploading image:", error);
+                alert("Failed to upload image. Please check your Client ID or try again.");
+                return null;
+            }
+        }
+
+        function generateQRCode() {
+            const fileInput = document.getElementById('file');
+            const qrcodeContainer = document.getElementById('qrcode');
+
+            // Clear any existing QR codes
+            qrcodeContainer.innerHTML = "";
+
+            if (!fileInput.files[0]) {
+                alert("Please upload an image.");
+                return;
+            }
+
+            // Upload image and get the URL
+            const file = fileInput.files[0];
+            uploadImage(file).then((imageUrl) => {
+                if (!imageUrl) {
+                    console.log("No image URL returned.");
+                    return;
+                }
+
+                uploadedImageURL = imageUrl;
+
+                // Generate the QR code that links to the uploaded image URL
+                new QRCode(qrcodeContainer, {
+                    text: uploadedImageURL,
+                    width: 300,
+                    height: 300,
+                    colorDark: "#213760",
+                    colorLight: "#ffffff",
+                    correctLevel: 3 // H corresponds to value 3
+                });
+
+                // Enable download and WhatsApp share buttons
+                document.getElementById("downloadBtn").disabled = false;
+                document.getElementById("whatsappBtn").disabled = false;
+            });
+        }
+
+        function downloadQRCode() {
+            const qrCanvas = document.querySelector("#qrcode canvas");
+            if (!qrCanvas) return;
+
+            const link = document.createElement("a");
+            link.href = qrCanvas.toDataURL("image/png");
+            link.download = "qrcode.png";
+            link.click();
+        }
+
+        function shareToWhatsApp() {
+            if (!uploadedImageURL) return;
+
+            const encodedMessage = encodeURIComponent(`Here's the QR code link for the image: ${uploadedImageURL}`);
+            const whatsappURL = `https://wa.me/?text=${encodedMessage}`;
+            window.open(whatsappURL, "_blank");
+        }
+
+        // Ensure QRCode library is loaded before calling any functions
+        window.onload = function() {
+            if (typeof QRCode === 'undefined') {
+                alert('QRCode library failed to load!');
+            }
+        }
+    </script>
+</body>
+</html>

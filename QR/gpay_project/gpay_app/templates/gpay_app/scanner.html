@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trim GIF with Vertical Images</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: auto;
+      overflow-y: auto;
+    }
+    #gif {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+    }
+    .vertical-images {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: stretch;
+      padding: 20px;
+      width: 90%;
+      max-width: 1200px;
+    }
+    .image-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      opacity: 0; /* Initially hidden */
+      transform: translateY(20px); /* Initially offset */
+      transition: opacity 1s ease, transform 1s ease; /* Smooth transition for opacity and position */
+    }
+    .image-container.show {
+      opacity: 1; /* Show container */
+      transform: translateY(0); /* Reset the position */
+    }
+    .image-container img {
+      width: 500px;
+      border: 3px solid #ddd;
+      border-radius: 12px;
+    }
+    .image-container:hover {
+      animation: jump 1.5s ease infinite;
+    }
+    .image-content {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 0 20px;
+      display: flex;
+      gap: 5px;
+    }
+    .image-content span {
+      display: inline-block;
+    }
+    @keyframes jump {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* Background colors for each image container */
+    .bg-email { background-color: #f8d7da; }
+    .bg-contact { background-color: #d1ecf1; }
+    .bg-whatsapp { background-color: #d4edda; }
+    .bg-linkedin { background-color: #cce5ff; }
+    .bg-github { background-color: #fef3c7; }
+
+    .bg-email .image-content { color: #a94442; }
+    .bg-contact .image-content { color: #31708f; }
+    .bg-whatsapp .image-content { color: #155724; }
+    .bg-linkedin .image-content { color: #004085; }
+    .bg-github .image-content { color: #856404; }
+  </style>
+</head>
+<body>
+    <img id="gif" src="https://i.pinimg.com/originals/b1/65/da/b165daef0a2e10d0ab2fe24ffc9e817c.gif" alt="GIF">
+  
+    <div class="vertical-images" id="image-stack">
+      <div class="image-container bg-email">
+        <div class="image-content">
+          <h1><span>M</span><span>A</span><span>I</span><span>L</span> <span>M</span><span>E</span></h1>
+        </div>
+        <a href="mailto:dineshkumare2003@gmail.com" target="_blank">
+          <img src="https://i.pinimg.com/originals/10/69/d4/1069d40cafdd793a3a7401fc9d87df1d.gif" alt="Email">
+        </a>
+      </div>
+      <div class="image-container bg-contact">
+        <a href="tel:+917397303677" target="_blank">
+          <img src="https://i.pinimg.com/736x/8d/ff/84/8dff84dba2519a2e8bc726c265d9b32b.jpg" alt="Contact.No" height="350px">
+        </a>
+        <div class="image-content">
+          <h1><span>C</span><span>O</span><span>N</span><span>T</span><span>A</span><span>C</span><span>T</span> <span>M</span><span>E</span></h1>
+        </div>
+      </div>
+      <div class="image-container bg-whatsapp">
+        <div class="image-content">
+          <h1><span>C</span><span>H</span><span>A</span><span>T</span> <span>W</span><span>I</span><span>T</span><span>H</span> <span>M</span><span>E</span></h1>
+        </div>
+        <a href="https://wa.me/919150422833" target="_blank">
+          <img src="https://i.pinimg.com/originals/7c/1d/ab/7c1dab157f34e603487b5d0b057da448.gif" alt="Whatsapp">
+        </a>
+      </div>
+      <div class="image-container bg-linkedin">
+        <a href="https://linkedin.com/in/narmadha-s-b506b3288" target="_blank">
+          <img src="https://i.pinimg.com/736x/ca/f4/a3/caf4a3e94c096246b5fd2600272074ea.jpg" alt="LinkedIn">
+        </a>
+        <div class="image-content">
+          <h1><span>S</span><span>E</span><span>A</span><span>R</span><span>C</span><span>H</span> <span>M</span><span>E</span> <span>O</span><span>N</span> <br> <span>L</span><span>I</span><span>N</span><span>K</span><span>E</span><span>D</span><span>I</span><span>N</span></h1>
+        </div>
+      </div>
+      <div class="image-container bg-github">
+        <div class="image-content">
+          <h1><span>S</span><span>E</span><span>A</span><span>R</span><span>C</span><span>H</span>  <span>M</span><span>Y</span> <span>W</span><span>O</span><span>R</span><span>K</span> <span>O</span><span>N</span> <br> <span>G</span><span>I</span><span>T</span><span>H</span><span>U</span><span>B</span></h1>
+        </div>
+        <a href="https://github.com/NARMADHA-IT" target="_blank">
+          <img src="https://i.pinimg.com/originals/c4/7b/9a/c47b9a94986b92ac592745ad3a1b8815.gif" alt="GitHub">
+        </a>
+      </div>
+    </div>
+  
+    <script>
+      const gifElement = document.getElementById("gif");
+      const imageStack = document.getElementById("image-stack");
+      const containers = document.querySelectorAll(".image-container");
+
+      setTimeout(() => {
+        // Hide the GIF and show the vertical images
+        gifElement.style.display = "none";
+        imageStack.style.display = "flex"; // Make the image stack visible
+
+        // Trigger the fade-in for the first image container
+        containers[0].classList.add('show');
+        
+        let index = 1;
+        
+        // Set interval to trigger the fade-in for the next image container
+        setInterval(() => {
+          if (index < containers.length) {
+            containers[index].classList.add('show');
+            index++;
+          }
+        }, 1200); // Delay for each container (adjust as needed)
+      }, 1100); // Delay to hide GIF and show the images
+    </script>
+</body>
+</html>

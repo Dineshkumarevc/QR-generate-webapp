@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Payment</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Body styling */
+        body {
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Body Styling with Image Background */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('https://mir-s3-cdn-cf.behance.net/project_modules/hd/1533e2105578543.606330d2c9a30.gif'); /* Add the image URL here */
+            background-size: cover; /* Ensures the image covers the whole screen */
+            background-position: center; /* Centers the background image */
+            background-attachment: fixed; /* Keeps the background fixed during scrolling */
+            color: #333;
+            text-align: center;
+        }
+
+        /* Title styling */
+        h1 {
+            color: #333;
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Form styling */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form p {
+            margin-bottom: 15px;
+        }
+
+        /* File upload styling */
+        label {
+            font-size: 1em;
+            color: #555;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        /* Submit button styling */
+        button[type="submit"] {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        
+
+        /* Home Icon Styling */
+        .home-icon {
+            font-size: 36px;
+            color: #4CAF50;
+            text-decoration: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+        }
+
+        .home-icon:hover {
+            color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Create Payment</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <!-- File Upload Field -->
+            <p>
+                <label for="fileUpload">Upload Invoice or Receipt (Optional)</label>
+                <input type="file" id="fileUpload" name="file" accept="image/*, .pdf">
+            </p>
+
+            <button type="submit">Create QR Code</button>
+        </form>
+        
+        <!-- Home Button -->
+        <a href="/" class="home-icon"><i class="fas fa-home"></i></a>
+
+    </div>
+
+
+
+    
+</body>
+</html>

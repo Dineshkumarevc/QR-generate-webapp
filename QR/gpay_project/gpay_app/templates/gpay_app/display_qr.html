@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your QR Code</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Body styling with image background */
+        body {
+            background-image: url('https://d6xcmfyh68wv8.cloudfront.net/assets/qr-code/1st-fold/qr.gif'); /* Add the image URL here */
+            background-size: cover; /* Ensures the image covers the whole screen */
+            background-position: center; /* Centers the background image */
+            background-attachment: fixed; /* Keeps the background fixed during scrolling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        /* Container styling */
+        .qr-container {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        /* Title styling */
+        h1 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        /* QR code styling */
+        img {
+            width: 100%;
+            max-width: 250px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+        }
+
+        /* Button styling */
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        /* Download button styling */
+        .download-btn {
+            background-color: #007bff;
+        }
+        
+        .download-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* WhatsApp button styling */
+        .whatsapp-btn {
+            background-color: #25D366;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #1DA851;
+        }
+    </style>
+</head>
+<body>
+    <div class="qr-container">
+        <h1>Your QR Code</h1>
+        <img src="{{ payment.qr_code.url }}" alt="QR Code">
+        
+        <!-- Download Button -->
+        <a href="{{ payment.qr_code.url }}" download onclick="confirmDownload(event)" class="button download-btn">Download QR Code</a>
+        
+        <!-- WhatsApp Share Button -->
+        <a href="#" class="button whatsapp-btn" onclick="shareOnWhatsApp()">Share on WhatsApp</a>
+    </div>
+
+    <script>
+        // JavaScript function to confirm download
+        function confirmDownload(event) {
+            const confirmDownload = confirm("Are you sure you want to download the QR code?");
+            if (!confirmDownload) {
+                event.preventDefault(); // Prevents download if user cancels
+            }
+        }
+
+        // JavaScript function to share QR code on WhatsApp
+        function shareOnWhatsApp() {
+            const qrCodeUrl = encodeURIComponent("{{ payment.qr_code.url }}");
+            const message = `Here is the QR Code for payment: ${qrCodeUrl}`;
+            const whatsappUrl = `https://wa.me/?text=${message}`;
+
+            // Open WhatsApp share link
+            window.open(whatsappUrl, "_blank");
+        }
+    </script>
+</body>
+</html>
